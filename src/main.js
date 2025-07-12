@@ -21,15 +21,8 @@ function calculateSimpleRevenue(purchase, _product) {
  */
 function calculateBonusByProfit(index, total, seller) {
     // @TODO: Расчет бонуса от позиции в рейтинге
-    // index - позиция продавца в рейтинге
-    // total - общее количество продавцов
-    // seller - карточка продавца с полями profit, revenue и т.д.
+
     const { profit } = seller;
-    // Логика расчета бонуса: чем выше позиция, тем больше бонус
-    // 15% — для продавца, который принёс наибольшую прибыль.
-    // 10% — для продавцов, которые оказались на втором и третьем месте по прибыли.
-    // 5% — для всех остальных продавцов, кроме последнего.
-    // 0% — для продавца, который оказался на последнем месте.
 
     if (index === 0) {
         return profit * 0.15;
@@ -55,6 +48,18 @@ function analyzeSalesData(data, options) {
 
     if (!data || !Array.isArray(data.sellers) || data.sellers.length === 0) {
         throw new Error('Invalid data format or empty sellers array');
+    }
+
+    if (!data || !Array.isArray(data.products) || data.products.length === 0) {
+        throw new Error('Invalid data format or empty producs array');
+    }
+
+    if (!data || !Array.isArray(data.purchase_records) || data.purchase_records.length === 0) {
+        throw new Error('Invalid data format or empty purchase_records array');
+    }
+
+    if (!data.customers || !Array.isArray(data.customers) || data.customers.length === 0) {
+        throw new Error('Invalid data format or empty customers array');
     }
 
     // @TODO: Проверка наличия опций
@@ -124,6 +129,7 @@ function analyzeSalesData(data, options) {
 
     });
     
+    // @TODO: Подготовка итоговой коллекции с нужными полями
     return sellerStats.map(seller => ({
         seller_id: seller.id,
         name: seller.name,
@@ -133,8 +139,4 @@ function analyzeSalesData(data, options) {
         top_products: seller.top_products,
         bonus: seller.bonus.toFixed(2)
     }));
-
-    
-
-    // @TODO: Подготовка итоговой коллекции с нужными полями
 }
